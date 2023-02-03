@@ -3,6 +3,7 @@ package com.javatechie.security.tutorial.controllers;
 import com.javatechie.security.tutorial.models.Product;
 import com.javatechie.security.tutorial.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,13 @@ public class ProductController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     List<Product> getAllProducts() {
         return this.productService.getProductList();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public Product getProductById(@PathVariable("id") int id) {
         return this.productService.getProduct(id);
     }
