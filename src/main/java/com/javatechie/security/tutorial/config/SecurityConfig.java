@@ -1,5 +1,7 @@
 package com.javatechie.security.tutorial.config;
 
+import com.javatechie.security.tutorial.config.service.UserInfoUserDetailsService;
+import com.javatechie.security.tutorial.repositories.UserInfoRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -18,26 +20,32 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder){
-        UserDetails admin = User.withUsername("Axel")
-                .password(encoder.encode("pass1"))
-                .roles("ADMIN")
-                .build();
+    public UserDetailsService userDetailsService(UserInfoRepository userInfoRepository){
 
-        UserDetails user = User.withUsername("Peter")
-                .password(encoder.encode("pass2"))
-                .roles("USER")
-                .build();
+        // ========= HARDCODED USER-DETAILS  ==========
 
-        return new InMemoryUserDetailsManager(admin, user);
+//        UserDetails admin = User.withUsername("Axel")
+//                .password(encoder.encode("pass1"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        UserDetails user = User.withUsername("Peter")
+//                .password(encoder.encode("pass2"))
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(admin, user);
+
+        return new UserInfoUserDetailsService(userInfoRepository);
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/products/welcome").permitAll()
+                .requestMatchers("/products/welcome", "/accounts/add-user").permitAll()
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/products/**").authenticated()
