@@ -2,8 +2,10 @@ package com.javatechie.security.tutorial.config;
 
 import com.javatechie.security.tutorial.config.service.UserInfoUserDetailsService;
 import com.javatechie.security.tutorial.repositories.UserInfoRepository;
+import com.mysql.cj.protocol.AuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,7 +24,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public UserDetailsService userDetailsService(UserInfoRepository userInfoRepository){
+    public UserDetailsService userDetailsService(){
 
         // ========= HARDCODED USER-DETAILS  ==========
 
@@ -38,7 +40,7 @@ public class SecurityConfig {
 //
 //        return new InMemoryUserDetailsManager(admin, user);
 
-        return new UserInfoUserDetailsService(userInfoRepository);
+        return new UserInfoUserDetailsService();
     }
 
     @Bean
@@ -59,4 +61,12 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//        authenticationProvider.setUserDetailsService(userDetailsService());
+//        authenticationProvider.setPasswordEncoder(passwordEncoder());
+//        return authenticationProvider;
+//    }
 }
